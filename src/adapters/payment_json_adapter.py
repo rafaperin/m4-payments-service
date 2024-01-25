@@ -11,3 +11,7 @@ def payment_to_json(payment: Payment):
 
 def payment_list_to_json(payment_list: List[Payment]):
     return [camelize_dict(payment.__dict__) for payment in payment_list]
+
+
+def qr_code_to_json(qr_code: str):
+    return {"qrCode": qr_code}

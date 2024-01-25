@@ -20,6 +20,17 @@ class PaymentDTO(CamelModel):
         }
 
 
+class GenerateQrCodeDTO(CamelModel):
+    qr_code: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "qr_code": "00020101021243650016COM.MERCADOLIBRE020130636bb094b54-a1c0-4996-9a13-fd2a98e68b145204000053039865802BR5913Loja Tech 0016009SAO PAULO62070503***6304FF0A",
+            }
+        }
+
+
 class CreatePaymentDTO(CamelModel):
     order_id: uuid.UUID
 
@@ -48,3 +59,7 @@ class PaymentDTOResponse(CamelModel):
 
 class PaymentDTOListResponse(CamelModel):
     result: List[PaymentDTO]
+
+
+class QrCodeResponse(CamelModel):
+    result: GenerateQrCodeDTO

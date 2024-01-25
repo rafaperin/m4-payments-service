@@ -40,31 +40,22 @@ class MercadoPagoAPI:
                 "total_amount": float(product["price"] * item["productQuantity"])
             }
             items.append(order_item)
-            print(items)
 
         headers = {
             "Authorization": f"Bearer {access_token}",
         }
 
-        print("a")
-        print(order)
-
         params = {
-            "external_reference": str(order["result"]["orderId"]),
-            "total_amount": float(order["result"]["orderTotal"]),
+            "external_reference": str(order["orderId"]),
+            "total_amount": float(order["orderTotal"]),
             "items": items,
-            "title": str(order["result"]["orderId"]),
-            "description": f"Pedido {order['result']['orderId']}",
+            "title": str(order["orderId"]),
+            "description": f"Pedido {order['orderId']}",
             "notification_url": f"{webhook_base_url}/webhook"
         }
 
-        print(mercado_pago_api_url)
-        print(headers)
-        print(params)
         r = httpx.post(mercado_pago_api_url, headers=headers, json=params)
-
         json_response = json.loads(r.content)
-        print(json_response)
 
         return json_response["qr_data"]
 

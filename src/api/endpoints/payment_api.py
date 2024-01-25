@@ -4,12 +4,13 @@ import uuid
 import httpx
 from fastapi import APIRouter, Request, status
 
+from src.adapters.payment_json_adapter import qr_code_to_json
 from src.api.errors.api_errors import APIErrorMessage
 from src.config.config import settings
 from src.config.errors import RepositoryError, ResourceNotFound
 from src.controllers.payment_controller import PaymentController
-from src.entities.schemas.payment_dto import CreatePaymentDTO, PaymentDTOResponse, PaymentDTOListResponse
-# from src.entities.schemas.payment_dto import OrderWithQrCodeDTOResponse
+from src.entities.schemas.payment_dto import CreatePaymentDTO, PaymentDTOResponse, PaymentDTOListResponse, \
+    QrCodeResponse
 from src.external.mercado_pago_api import MercadoPagoAPI
 
 router = APIRouter(tags=["Payment"])
@@ -43,31 +44,32 @@ async def get_all_payments() -> dict:
 
 @router.post(
     "/payments/mercado-pago",
-    response_model=PaymentDTOListResponse,
+    response_model=QrCodeResponse,
     status_code=status.HTTP_200_OK,
     responses={400: {"model": APIErrorMessage},
                404: {"model": APIErrorMessage},
                500: {"model": APIErrorMessage}}
 )
-async def create_order_on_mercado_pago(order_id: uuid.UUID) -> dict:
+async def create_order_on_mercado_pago(order: CreatePaymentDTO) -> dict:
     try:
         headers = {
             # "Authorization": f"Bearer {access_token}",
         }
 
-        r = httpx.get(f"{settings.ORDERS_SERVICE}/orders/id/{order_id}", headers=headers)
+        r = httpx.get(f"{settings.ORDERS_SERVICE}/orders/id/{order.order_id}", headers=headers)
         json_response = json.loads(r.content)
         order = json_response["result"]
 
         qr_code = await MercadoPagoAPI.create_order_on_mercado_pago(order)
-    except Exception as e:
+        result = qr_code_to_json(qr_code)
+    except Exception:
         raise RepositoryError.get_operation_failed()
 
-    return {"result": qr_code}
+    return {"result": result}
 
 
 @router.get(
-    "/payments/id/{payment_id}",
+    "/payments/id/{order_id}",
     response_model=PaymentDTOResponse,
     status_code=status.HTTP_200_OK,
     responses={400: {"model": APIErrorMessage},
@@ -107,7 +109,7 @@ async def create_payment(
 
 
 @router.delete(
-    "/payments/{payment_id}",
+    "/payments/{order_id}",
     status_code=status.HTTP_200_OK,
     responses={400: {"model": APIErrorMessage},
                404: {"model": APIErrorMessage},
