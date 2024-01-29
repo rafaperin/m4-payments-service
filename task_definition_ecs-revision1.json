@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:604623258149:task-definition/m4-payments:2",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:604623258149:task-definition/m4-payments:6",
     "containerDefinitions": [
         {
             "name": "m4-payments-1",
-            "image": "604623258149.dkr.ecr.us-east-1.amazonaws.com/m4-payments:latest",
+            "image": "604623258149.dkr.ecr.us-east-1.amazonaws.com/m4-payments:b87e2cb8e175ef9e19232b604f95778512c2e785",
             "cpu": 0,
             "portMappings": [
                 {
@@ -22,11 +22,11 @@
                 },
                 {
                     "name": "PRODUCTS_SERVICE",
-                    "value": "m4-products-alb-277719434.us-east-1.elb.amazonaws.com:8000"
+                    "value": "http://m4-products-alb-277719434.us-east-1.elb.amazonaws.com:8000"
                 },
                 {
                     "name": "WEBHOOK_BASE_URL",
-                    "value": "m4-payments-alb-1685891886.us-east-1.elb.amazonaws.com"
+                    "value": "http://m4-payments-alb-1685891886.us-east-1.elb.amazonaws.com:8002"
                 },
                 {
                     "name": "JWT_ALGORITHM",
@@ -34,7 +34,7 @@
                 },
                 {
                     "name": "POSTGRES_HOST",
-                    "value": "m4-payments-db.c10ffknjsfsb.us-east-1.rds.amazonaws.com"
+                    "value": "http://m4-payments-db.c10ffknjsfsb.us-east-1.rds.amazonaws.com"
                 },
                 {
                     "name": "ENVIRONMENT",
@@ -42,7 +42,7 @@
                 },
                 {
                     "name": "ORDERS_SERVICE",
-                    "value": "m4-orders-alb-1304370311.us-east-1.elb.amazonaws.com:8003"
+                    "value": "http://m4-orders-alb-1304370311.us-east-1.elb.amazonaws.com:8003"
                 },
                 {
                     "name": "POSTGRES_DB",
@@ -86,7 +86,7 @@
     "taskRoleArn": "arn:aws:iam::604623258149:role/my-ecs-execution-role",
     "executionRoleArn": "arn:aws:iam::604623258149:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 2,
+    "revision": 6,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -132,7 +132,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-01-29T00:51:28.997Z",
+    "registeredAt": "2024-01-29T21:04:18.616Z",
     "registeredBy": "arn:aws:iam::604623258149:root",
     "tags": []
 }
